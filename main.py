@@ -1,7 +1,7 @@
 
 """
 tareas:
-* ver como crear el archivo imagen dentro la carpeta
+* Insertar detalles a txt
 
 """
 
@@ -13,10 +13,22 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-#nombreCarpeta = '32323'
-#nombreArchivo = nombreCarpeta
+multi_line_string = """TITULO\n
+Precio:\n
+Caracateristicas:\n
+🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠
+📌Para mayor información, consulta por whatsapp:
+Catalogo: 
+https://wa.me/c/59162722006
+https://wa.me/c/59174810534
+📲Llamanos al whatsapp: 74810534-62722006\n
+Enlaces:\n
+Etiquetas herramientas:\n
+Tolsen, Herramientas, Construccion, Mecanico, taller, Drywall\n
+"""
 
 categoriaProducto = 'tool-set'
+contadorPagina = 1
 listaImagen = list()
 listaProducto = list()
 
@@ -32,29 +44,38 @@ for element in fichaProductos:
     imagenProducto = element.find('img', class_ = 'woo-entry-image-main').get('src')
     nombreProducto = element.find('div', class_ = 'product-details match-height-content').getText('', strip = True)
 
-    #print(imagenProducto)
-    #print(nombreProducto)
+    
     #print(type(nombreProducto))
     cont = cont + 1
 
     img = requests.get(imagenProducto, headers = {"User-Agent": "Chrome/50.0.2661.94"})
-    recortarNombre = str(imagenProducto) 
+    recortarCaracteres = str(imagenProducto)
+    recortarCaracteres2 = str(nombreProducto)
     
     
-
+    
     caracteres = "http://www.tolsentools.com/wp-content/uploads/jpg"
+    caracteres2 = "/″"
 
-    recortarNombre = ''.join(x for x in recortarNombre if x not in caracteres)
-    nombreImagen = recortarNombre[6:] + " - " + nombreProducto + ".jpg"
+    recortarNombre2 = ''.join(x for x in recortarCaracteres2 if x not in caracteres2)
+    recortarNombre = ''.join(x for x in recortarCaracteres if x not in caracteres)
+    nombreImagen = recortarNombre[6:] + " - " + recortarNombre2 + ".jpg"
 
-    NombreCarpeta = recortarNombre[6:] + " - " + nombreProducto
+    NombreCarpeta = recortarNombre[6:] + " - " + recortarNombre2
+
+    print(imagenProducto)
+    print(recortarNombre2)
 
     try:
-        os.mkdir(NombreCarpeta)
+        os.mkdir(f"C:/Users/Victor/OneDrive/ventas/Tolsen/Set de herramientas/{NombreCarpeta}")
 
-        with open(f"{NombreCarpeta}/{nombreImagen}", 'wb') as imagen:
+        with open(f"C:/Users/Victor/OneDrive/ventas/Tolsen/Set de herramientas/{NombreCarpeta}/{nombreImagen}", 'wb') as imagen:
             imagen.write(img.content)
 
+        with open(f"C:/Users/Victor/OneDrive/ventas/Tolsen/Set de herramientas/{NombreCarpeta}/Detalles.txt", 'w', encoding = 'utf-8') as file:            
+            file.write(multi_line_string)
+
+        
 
     except OSError:
         print('fallo')

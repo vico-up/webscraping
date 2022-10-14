@@ -57,12 +57,16 @@ def tituloDetalles():
 
 def crearArchivo():
     with open(f"{rutaCarpetita}/detalles.txt", "a", encoding="UTF-8") as file:
-        file.write(f"{tituloEsp}")
-        file.write(f"{listaDetallesHerram}")
+        file.write(f"{tituloEsp}\n\n")
+        file.write("Precio: \n\nCaracteristicas\n")
+        file.write(f"{detallesEsp}\n")
+        file.write("\n🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠🛠\n📌Para mayor información, consulta por whatsapp:\nCatalogo:\nhttps://wa.me/c/59162722006\nhttps://wa.me/c/59174810534\n\n📲Llamanos al whatsapp: 74810534-62722006\n")
+        file.write(f'\nEnlaces: {enlaceProducto}\n')
+        file.write("\nEtiquetas herramientas:\nTolsen, Herramientas, Construccion, Mecanico, taller, Drywall\n")
 
 def leerDatosHerramienta():
-    for element in titulo:
-        datitos = element.find('p').getText('', strip = True)       
+    for element in datosHerramienta:
+        datitos = element.find('p').getText()       
         return datitos
 
 
@@ -80,13 +84,17 @@ Etiquetas herramientas:\n
 Tolsen, Herramientas, Construccion, Mecanico, taller, Drywall\n
 """  
 traducirTitulo = None
+traducirDetalles = None
 datitosHerramienta = None
-listaDetallesHerram = []
+listaDetallesHerram = None
 tituloEsp = None
+detallesEsp = None
 translator = Translator()
 
-direccionMadre = "C:/Users/Victor/OneDrive/ventas/Tolsen/Set de herramientas"
-categoriaProducto = 'tool-set'
+enlaceProducto = None
+
+direccionMadre = "C:/Users/Victor/OneDrive/ventas/Tolsen/Power tools"
+categoriaProducto = 'power-tools'
 
 urlCategoria = (f'http://www.tolsentools.com/product-catagories/{categoriaProducto}/page/2/')
 r = requests.get(urlCategoria, headers = {'User-Agent': "Chrome/50.0.2661.94"})
@@ -97,8 +105,8 @@ fichaProductos = soup.find_all('div', class_ = 'product-inner clr')
 cont = 0
 
 for element in fichaProductos:
-    enlace = element.find('a', class_ = 'woocommerce-LoopProduct-link woocommerce-loop-product__link').get('href')
-    r2 = requests.get(enlace, headers={'User-Agent': "Chrome/50.0.2661.94"})
+    enlaceProducto = element.find('a', class_ = 'woocommerce-LoopProduct-link woocommerce-loop-product__link').get('href')
+    r2 = requests.get(enlaceProducto, headers={'User-Agent': "Chrome/50.0.2661.94"})
     html2 = r2.content
     soup2 = BeautifulSoup(html2, 'html.parser')
     titulo = soup2.find_all("div", class_= "summary entry-summary")
@@ -112,12 +120,8 @@ for element in fichaProductos:
     traducirTitulo = translator.translate(f'{titulitoDetalles}', src='en', dest='es')
     tituloEsp = traducirTitulo.text
     datitosHerramienta = leerDatosHerramienta()
-    listaDetallesHerram.append(datitosHerramienta)
+    traducirDetalles = translator.translate(f'{datitosHerramienta}', src = 'en', dest = 'es')
+    detallesEsp = traducirDetalles.text  
     crearArchivo()
-    print(listaDetallesHerram)
 
     cont = cont + 1 
-    
-
-
-

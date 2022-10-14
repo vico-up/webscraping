@@ -45,7 +45,7 @@ def crearFoto():
 
 def leerDatosHerramienta():
     for element in leerDatosHe:
-        datitos = element.find('p').getText('', strip = True)       
+        datitos = element.find('p').getText()       
         datosStr = str(datitos)
         return datosStr
         
@@ -82,7 +82,7 @@ for element in fichaProductos:
     #rutaCarpetita = crearCarpeta(direccionMadre)
     #crearFoto()
     datitosHerramientas = leerDatosHerramienta()
-    print(type(datitosHerramientas))
+    print(datitosHerramientas)
     
     
     cont = cont + 1 
